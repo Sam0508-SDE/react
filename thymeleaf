@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Spring Batch Job Dashboard</title>
-    <!-- ✅ Local Bootstrap -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
@@ -12,58 +11,56 @@
 
     <!-- Job Instance Table -->
     <table class="table table-bordered">
-    <thead class="table-dark">
-    <tr>
-        <th>Instance ID</th>
-        <th>Job Name</th>
-        <th>Executions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="instance : ${instanceList}">
-        <td th:text="${instance['instanceId']}"></td>
-        <td th:text="${instance['jobName']}"></td>
-        <td>
-            <table class="table table-sm table-striped">
-                <thead>
-                <tr>
-                    <th>Execution ID</th>
-                    <th>Status</th>
-                    <th>Exit Code</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="exec : ${instance['executions']}">
-                    <td th:text="${exec['executionId']}"></td>
-                    
-                    <td th:text="${exec['status']}"
-                        th:classappend="${exec['status']} == 'FAILED' ? 'text-danger' : ''"
-                        th:classappend="${exec['status']} == 'COMPLETED' ? 'text-success' : ''"
-                        th:classappend="${exec['status']} == 'STARTED' ? 'text-primary' : ''"
-                        th:classappend="${exec['status']} == 'STARTING' ? 'text-warning' : ''">
-                    </td>
-                    
-                    <td th:text="${exec['exitCode']}"></td>
-                    <td th:text="${exec['startTime']}"></td>
-                    <td th:text="${exec['endTime']} != null ? ${exec['endTime']} : '-'"></td>
-                    <td>
-                        <form th:action="@{'/stop/' + ${exec['executionId']}}" method="post">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    th:disabled="${exec['status']} != 'STARTED' and ${exec['status']} != 'STARTING'">
-                                Stop
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <thead class="table-dark">
+        <tr>
+            <th>Instance ID</th>
+            <th>Job Name</th>
+            <th>Executions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="instance : ${instanceList}">
+            <td th:text="${instance['instanceId']}"></td>
+            <td th:text="${instance['jobName']}"></td>
+            <td>
+                <table class="table table-sm table-striped">
+                    <thead>
+                    <tr>
+                        <th>Execution ID</th>
+                        <th>Status</th>
+                        <th>Exit Code</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="exec : ${instance['executions']}">
+                        <td th:text="${exec['executionId']}"></td>
+                        <td th:text="${exec['status']}"
+                            th:classappend="${exec['status']} == 'FAILED' ? 'text-danger' : ''"
+                            th:classappend="${exec['status']} == 'COMPLETED' ? 'text-success' : ''"
+                            th:classappend="${exec['status']} == 'STARTED' ? 'text-primary' : ''"
+                            th:classappend="${exec['status']} == 'STARTING' ? 'text-warning' : ''">
+                        </td>
+                        <td th:text="${exec['exitCode']}"></td>
+                        <td th:text="${exec['startTime']}"></td>
+                        <td th:text="${exec['endTime']} != null ? ${exec['endTime']} : '-' "></td>
+                        <td>
+                            <form th:action="@{'/stop/' + ${exec['executionId']}}" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        th:disabled="${exec['status']} != 'STARTED' and ${exec['status']} != 'STARTING'">
+                                    Stop
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <!-- New Job Form -->
     <h4 class="mt-5">🚀 Launch New Batch Job</h4>
