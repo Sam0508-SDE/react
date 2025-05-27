@@ -30,7 +30,7 @@
                 <span th:if="${item['status']} == 'COMPLETED'" class="badge bg-success" th:text="${item['status']}"></span>
                 <span th:if="${item['status']} == 'FAILED'" class="badge bg-danger" th:text="${item['status']}"></span>
                 <span th:if="${item['status']} == 'STARTED'" class="badge bg-warning text-dark" th:text="${item['status']}"></span>
-                <span th:if="${item['status']} != 'COMPLETED' and item['status']} != 'FAILED' and item['status']} != 'STARTED'" class="badge bg-secondary" th:text="${item['status']}"></span>
+                <span th:if="${item['status'] != 'COMPLETED' and item['status'] != 'FAILED' and item['status'] != 'STARTED'}" class="badge bg-secondary" th:text="${item['status']}"></span>
             </td>
 
             <td th:text="${item['exitCode']}"></td>
