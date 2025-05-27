@@ -38,10 +38,10 @@
                     <tr th:each="exec : ${instance['executions']}">
                         <td th:text="${exec['executionId']}"></td>
                         <td th:text="${exec['status']}"
-                            th:classappend="${exec['status']} == 'FAILED' ? 'text-danger' : ''"
-                            th:classappend="${exec['status']} == 'COMPLETED' ? 'text-success' : ''"
-                            th:classappend="${exec['status']} == 'STARTED' ? 'text-primary' : ''"
-                            th:classappend="${exec['status']} == 'STARTING' ? 'text-warning' : ''">
+                            th:classappend="${exec['status']} == 'FAILED' ? 'text-danger' :
+                                            (exec['status'] == 'COMPLETED' ? 'text-success' :
+                                            (exec['status'] == 'STARTED' ? 'text-primary' :
+                                            (exec['status'] == 'STARTING' ? 'text-warning' : '')))">
                         </td>
                         <td th:text="${exec['exitCode']}"></td>
                         <td th:text="${exec['startTime']}"></td>
