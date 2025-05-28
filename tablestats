@@ -1,0 +1,17 @@
+<h4>📊 Table Conversion Summary</h4>
+<table class="table table-bordered table-sm mt-3">
+  <thead>
+    <tr>
+      <th>Table Name</th>
+      <th>Converted Rows</th>
+      <th>Remaining Rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="entry : ${tableStats}">
+      <td th:text="${entry.key}">Table</td>
+      <td th:text="${entry.value.converted}">0</td>
+      <td th:text="${entry.value.remaining}">0</td>
+    </tr>
+  </tbody>
+</table>
