@@ -15,3 +15,16 @@
     </tr>
   </tbody>
 </table>
+
+
+<td>
+  <span th:classappend="
+      ${item['status']} == 'COMPLETED' ? 'badge bg-success' :
+      ${item['status']} == 'FAILED' ? 'badge bg-danger' :
+      ${item['status']} == 'STARTED' ? 'badge bg-primary' :
+      ${item['status']} == 'STOPPED' ? 'badge bg-secondary' :
+      'badge bg-warning'
+    "
+    th:text="${item['status']}">
+  </span>
+</td>
