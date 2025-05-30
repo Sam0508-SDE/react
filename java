@@ -19,3 +19,17 @@
             "remaining", total - converted
         ));
     }
+String updateQuery = String.format("""
+    BEGIN
+      UPDATE %s
+         SET %s = :newEncryptedData
+       WHERE %s = :originalEncryptedData
+         AND ROWNUM = 1;
+
+      UPDATE %s
+         SET MIGRATION_FLAG = :flag
+       WHERE %s = :originalEncryptedData
+         AND ROWNUM = 1
+         AND MIGRATION_FLAG NOT IN ('Y', 'C');
+    END;
+""", baseTableName, destinationColumn, sourceColumn, tableName, sourceColumn);
