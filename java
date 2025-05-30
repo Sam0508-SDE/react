@@ -75,3 +75,7 @@ public JdbcBatchItemWriter<Databaserow> writerFlagTable(DataSource dataSource,
             .dataSource(dataSource)
             .build();
 }
+
+
+ CompositeItemWriter<Databaserow> compositeWriter = new CompositeItemWriter<>();
+    compositeWriter.setDelegates(List.of(writerMainTable, writerFlagTable));
