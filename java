@@ -33,3 +33,45 @@ String updateQuery = String.format("""
          AND MIGRATION_FLAG NOT IN ('Y', 'C');
     END;
 """, baseTableName, destinationColumn, sourceColumn, tableName, sourceColumn);
+
+
+
+
+@Bean
+@StepScope
+public JdbcBatchItemWriter<Databaserow> writerMainTable(DataSource dataSource,
+        @Value("#{jobParameters['tableName']}") String tableName,
+        @Value("#{jobParameters['destinationColumn']}") String destinationColumn) {
+
+    String baseTableName = tableName.toUpperCase().endsWith("_STAG")
+            ? tableName.substring(0, tableName.length() - 5)
+            : tableName;
+
+    String mainUpdateQuery = String.format(
+        "UPDATE %s SET %s = :newEncryptedData WHERE TRANSACTION_ID = :originalEncryptedData",
+        baseTableName, destinationColumn
+    );
+
+    return new JdbcBatchItemWriterBuilder<Databaserow>()
+            .sql(mainUpdateQuery)
+            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+            .dataSource(dataSource)
+            .build();
+}
+
+@Bean
+@StepScope
+public JdbcBatchItemWriter<Databaserow> writerFlagTable(DataSource dataSource,
+        @Value("#{jobParameters['tableName']}") String tableName) {
+
+    String flagUpdateQuery = String.format(
+        "UPDATE %s SET MIGRATION_FLAG = :flag WHERE TRANSACTION_ID = :originalEncryptedData",
+        tableName
+    );
+
+    return new JdbcBatchItemWriterBuilder<Databaserow>()
+            .sql(flagUpdateQuery)
+            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+            .dataSource(dataSource)
+            .build();
+}
