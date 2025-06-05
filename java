@@ -91,3 +91,20 @@ public Step callPrcTransCardStep(StepBuilderFactory stepBuilderFactory) {
                 return RepeatStatus.FINISHED;
             }).build();
 }
+
+
+@Bean
+public Step callPrcTransCardStep(JobRepository jobRepository,
+                                 PlatformTransactionManager transactionManager) {
+    return new StepBuilder("callPrcTransCardStep", jobRepository)
+            .tasklet((contribution, chunkContext) -> {
+                try (Connection conn = dataSource.getConnection();
+                     CallableStatement cs = conn.prepareCall("{call PRC_TRANS_CARD()}")) {
+                    cs.execute();
+                } catch (SQLException e) {
+                    throw new RuntimeException("Failed to execute PRC_TRANS_CARD", e);
+                }
+                return RepeatStatus.FINISHED;
+            }, transactionManager)
+            .build();
+}
