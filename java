@@ -79,3 +79,15 @@ public JdbcBatchItemWriter<Databaserow> writerFlagTable(DataSource dataSource,
 
  CompositeItemWriter<Databaserow> compositeWriter = new CompositeItemWriter<>();
     compositeWriter.setDelegates(List.of(writerMainTable, writerFlagTable));
+
+
+
+
+@Bean
+public Step callPrcTransCardStep(StepBuilderFactory stepBuilderFactory) {
+    return stepBuilderFactory.get("callPrcTransCardStep")
+            .tasklet((contribution, chunkContext) -> {
+                jdbcTemplate.execute("CALL PRC_TRANS_CARD()");
+                return RepeatStatus.FINISHED;
+            }).build();
+}
