@@ -98,3 +98,12 @@
         }
     }
 </script>
+
+
+<tr th:each="entry : ${tableStats}">
+    <td th:text="${entry.key}"></td>
+    <td th:text="${entry.value.converted}"
+        th:class="${entry.value.converted == 0} ? 'text-danger' :
+                  (entry.value.remaining == 0) ? 'text-success' : 'text-warning'"></td>
+    <td th:text="${entry.value.remaining}"></td>
+</tr>
