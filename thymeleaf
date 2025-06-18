@@ -188,3 +188,21 @@
     </tr>
   </tbody>
 </table>
+
+
+
+
+
+
+<tr th:each="entry : ${tableStats}"
+    th:with="converted=${entry.value['converted']}, remaining=${entry.value['remaining']}">
+  <td th:text="${entry.key}"></td>
+  <td th:text="${converted}"></td>
+  <td>
+    <span th:text="${remaining}"
+          th:classappend="${remaining == 0} ? 'badge bg-success' :
+                          (converted == 0 ? 'badge bg-danger' : 'badge bg-warning')"
+          class="text-white px-3 py-2 rounded-pill fw-semibold">
+    </span>
+  </td>
+</tr>
