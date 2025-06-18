@@ -164,3 +164,24 @@ public String showJobForm(Model model) {
 }
 
 
+
+public class TableConfigDTO {
+    private String tableName;
+    private String sourceColumn;
+    private String destinationColumn;
+    private String primaryKey;
+
+    public TableConfigDTO(String tableName, String sourceColumn, String destinationColumn, String primaryKey) {
+        this.tableName = tableName;
+        this.sourceColumn = sourceColumn;
+        this.destinationColumn = destinationColumn;
+        this.primaryKey = primaryKey;
+    }
+
+    public String getTableName() { return tableName; }
+    public String getSourceColumn() { return sourceColumn; }
+    public String getDestinationColumn() { return destinationColumn; }
+    public String getPrimaryKey() { return primaryKey; }
+}
+
+
