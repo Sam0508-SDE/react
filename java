@@ -183,5 +183,7 @@ public class TableConfigDTO {
     public String getDestinationColumn() { return destinationColumn; }
     public String getPrimaryKey() { return primaryKey; }
 }
-
+ObjectMapper objectMapper = new ObjectMapper();
+String configJson = objectMapper.writeValueAsString(configMap);
+model.addAttribute("configJson", configJson);
 
