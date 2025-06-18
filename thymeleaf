@@ -113,3 +113,18 @@
     th:class="${entry.value.remaining == 0} ? 'text-success' :
               (${entry.value.converted == 0} ? 'text-danger' : 'text-warning')">
 </td>
+
+
+
+<tr th:each="entry : ${tableStats}">
+  <td th:text="${entry.key}"></td>
+  <td th:text="${entry.value.converted}"></td>
+
+  <td>
+    <span th:text="${entry.value.remaining}"
+          th:classappend="${entry.value.remaining == 0} ? 'bg-success' :
+                          (${entry.value.converted == 0} ? 'bg-danger' : 'bg-warning')"
+          class="badge text-white px-3 py-2 rounded-pill fw-semibold">
+    </span>
+  </td>
+</tr>
