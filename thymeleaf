@@ -157,3 +157,34 @@
     </tr>
   </tbody>
 </table>
+
+
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Table Name</th>
+      <th>Converted Rows</th>
+      <th>Remaining Rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="entry : ${tableStats}">
+      
+      <!-- Table Name -->
+      <td th:text="${entry.key}"></td>
+      
+      <!-- Converted Rows -->
+      <td th:text="${entry.value['converted']}"></td>
+
+      <!-- Remaining Rows with colored pill -->
+      <td>
+        <span th:text="${entry.value['remaining']}"
+              th:classappend="entry.value['remaining'] == 0 ? 'badge bg-success' :
+                              (entry.value['converted'] == 0 ? 'badge bg-danger' : 'badge bg-warning')"
+              class="text-white px-3 py-2 rounded-pill fw-semibold">
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
