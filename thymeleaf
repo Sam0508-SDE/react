@@ -107,3 +107,9 @@
                   (entry.value.remaining == 0) ? 'text-success' : 'text-warning'"></td>
     <td th:text="${entry.value.remaining}"></td>
 </tr>
+
+
+<td th:text="${entry.value.remaining}" 
+    th:class="${entry.value.remaining == 0} ? 'text-success' :
+              (${entry.value.converted == 0} ? 'text-danger' : 'text-warning')">
+</td>
