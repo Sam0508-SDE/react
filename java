@@ -108,3 +108,59 @@ public Step callPrcTransCardStep(JobRepository jobRepository,
             }, transactionManager)
             .build();
 }
+
+
+//DTO 
+
+public class TableConfigDTO {
+    private String tableName;
+    private String sourceColumn;
+    private String destinationColumn;
+    private String primaryKey;
+
+    // getters/setters
+}
+
+
+//REPO
+@Repository
+public class TableConfigRepository {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public List<TableConfigDTO> findAllConfigs() {
+        return jdbcTemplate.query("SELECT table_name, source_column, destination_column, primary_key FROM table_config",
+                (rs, rowNum) -> {
+                    TableConfigDTO dto = new TableConfigDTO();
+                    dto.setTableName(rs.getString("table_name"));
+                    dto.setSourceColumn(rs.getString("source_column"));
+                    dto.setDestinationColumn(rs.getString("destination_column"));
+                    dto.setPrimaryKey(rs.getString("primary_key"));
+                    return dto;
+                });
+    }
+}
+
+
+//DASHBOARD
+
+@GetMapping("/job")
+public String showJobForm(Model model) {
+    List<TableConfigDTO> configs = tableConfigRepository.findAllConfigs();
+
+    // For dropdown
+    model.addAttribute("tables", configs.stream()
+        .map(TableConfigDTO::getTableName)
+        .collect(Collectors.toList()));
+
+    // For auto-filling values (map table → config)
+    Map<String, TableConfigDTO> configMap = configs.stream()
+        .collect(Collectors.toMap(TableConfigDTO::getTableName, Function.identity()));
+
+    model.addAttribute("configMap", configMap);
+
+    return "job-form";
+}
+
+
