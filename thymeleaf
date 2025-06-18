@@ -82,3 +82,19 @@
 <input type="text" id="sourceColumn" name="sourceColumn">
 <input type="text" id="destinationColumn" name="destinationColumn">
 <input type="text" id="primaryKey" name="primaryKey">
+
+
+<script th:inline="javascript">
+    const configMap = /*[[${configMap}]]*/ {};
+
+    function populateFields() {
+        const selected = document.getElementById("tableDropdown").value;
+        const config = configMap[selected];
+
+        if (config) {
+            document.getElementById("sourceColumn").value = config.sourceColumn;
+            document.getElementById("destinationColumn").value = config.destinationColumn;
+            document.getElementById("primaryKey").value = config.primaryKey;
+        }
+    }
+</script>
