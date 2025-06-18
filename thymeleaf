@@ -70,3 +70,15 @@
 </div>
 </body>
 </html>
+
+
+<select id="tableDropdown" name="tableName" onchange="populateFields()">
+    <option value="">Select table</option>
+    <th:block th:each="t : ${tables}">
+        <option th:value="${t}" th:text="${t}"></option>
+    </th:block>
+</select>
+
+<input type="text" id="sourceColumn" name="sourceColumn">
+<input type="text" id="destinationColumn" name="destinationColumn">
+<input type="text" id="primaryKey" name="primaryKey">
