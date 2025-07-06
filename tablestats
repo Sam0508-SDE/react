@@ -28,3 +28,39 @@
     th:text="${item['status']}">
   </span>
 </td>
+
+
+
+function populateFields() {
+  const selected = document.getElementById("tableDropdown").value;
+  const config = configMap[selected];
+
+  if (config) {
+    const sourceSelect = document.getElementById("sourceColumn");
+    const destSelect = document.getElementById("destinationColumn");
+
+    sourceSelect.innerHTML = "";
+    destSelect.innerHTML = "";
+
+    const srcCols = config.sourceColumn.split(",");
+    const dstCols = config.destinationColumn.split(",");
+
+    srcCols.forEach(col => {
+      const option = document.createElement("option");
+      option.value = col.trim();
+      option.text = col.trim();
+      sourceSelect.appendChild(option);
+    });
+
+    dstCols.forEach(col => {
+      const option = document.createElement("option");
+      option.value = col.trim();
+      option.text = col.trim();
+      destSelect.appendChild(option);
+    });
+
+    // Optional: Pre-select first option
+    if (srcCols.length > 0) sourceSelect.value = srcCols[0].trim();
+    if (dstCols.length > 0) destSelect.value = dstCols[0].trim();
+  }
+}
