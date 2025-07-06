@@ -372,3 +372,24 @@ public class EncryptionProcessor implements ItemProcessor<Map<String, String>, M
 
         return row;
     }
+
+
+    String sql = "UPDATE " + tableName + " SET " +
+             destinationColumnSql + ", migration_flag = :migrationFlag " +
+             "WHERE " + primaryKeyColumn + " = :primaryKey";
+
+writer.setItemSqlParameterSourceProvider(new ItemSqlParameterSourceProvider<>() {
+    @Override
+    public SqlParameterSource createSqlParameterSource(Map<String, String> item) {
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+
+        for (Map.Entry<String, String> entry : item.entrySet()) {
+            paramSource.addValue(entry.getKey(), entry.getValue());
+        }
+
+        // Alias "conversion_status" → "migrationFlag"
+        paramSource.addValue("migrationFlag", item.get("conversion_status"));
+
+        return paramSource;
+    }
+}); so this will set destinatin column vlaue to encrypted values we set in processor 
