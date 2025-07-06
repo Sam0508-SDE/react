@@ -335,19 +335,24 @@ public JdbcBatchItemWriter<Databaserow> writer(String table, String destinationC
 public Map<String, String> process(Map<String, String> row) {
     try {
         String[] sourceCols = row.get("sourceColumns").split(",");
-        for (String src : sourceCols) {
-            src = src.trim();
+        String[] destCols = row.get("destinationColumns").split(",");
+
+        for (int i = 0; i < sourceCols.length; i++) {
+            String src = sourceCols[i].trim();
+            String dst = destCols[i].trim();
+
             String raw = row.get(src);
             if (raw != null && !raw.isBlank()) {
                 String decrypted = new String(decryptAESGCNopadding(hexToByte(raw), oldKey.getBytes()));
                 String encrypted = toHexString(encryptAESGCNopadding(decrypted.getBytes(), newKey.getBytes()));
-                String destCol = "aes_" + src.toLowerCase();
-                row.put(destCol, encrypted);
+                row.put(dst, encrypted);
             }
         }
+
         row.put("conversion_status", "Y");
     } catch (Exception e) {
         row.put("conversion_status", "C");
     }
+
     return row;
 }
