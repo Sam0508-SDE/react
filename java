@@ -330,8 +330,18 @@ public JdbcBatchItemWriter<Databaserow> writer(String table, String destinationC
 
 
 
+public class EncryptionProcessor implements ItemProcessor<Map<String, String>, Map<String, String>> {
 
-@Override
+    private final String oldKey;
+    private final String newKey;
+    private static final Logger log = LoggerFactory.getLogger(EncryptionProcessor.class);
+
+    public EncryptionProcessor(String oldKey, String newKey) {
+        this.oldKey = oldKey;
+        this.newKey = newKey;
+    }
+
+    @Override
     public Map<String, String> process(Map<String, String> row) {
         try {
             String[] sourceCols = row.get("sourceColumns").split(",");
