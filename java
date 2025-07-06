@@ -334,25 +334,45 @@ public JdbcBatchItemWriter<Databaserow> writer(String table, String destinationC
 @Override
 public Map<String, String> process(Map<String, String> row) {
     try {
-        String[] sourceCols = row.get("sourceColumns").split(",");
-        String[] destCols = row.get("destinationColumns").split(",");
+        String sourceColumn = row.get("sourceColumns");
+        String destinationColumn = row.get("destinationColumns");
 
-        for (int i = 0; i < sourceCols.length; i++) {
-            String src = sourceCols[i].trim();
-            String dst = destCols[i].trim();
-
-            String raw = row.get(src);
+        if (!sourceColumn.contains(",")) {
+            // 🟢 Single-column logic
+            String raw = row.get(sourceColumn);
             if (raw != null && !raw.isBlank()) {
                 String decrypted = new String(decryptAESGCNopadding(hexToByte(raw), oldKey.getBytes()));
                 String encrypted = toHexString(encryptAESGCNopadding(decrypted.getBytes(), newKey.getBytes()));
-                row.put(dst, encrypted);
+                row.put(destinationColumn, encrypted);
+            }
+        } else {
+            // 🟡 Multi-column logic
+            String[] sourceCols = sourceColumn.split(",");
+            String[] destCols = destinationColumn.split(",");
+
+            if (sourceCols.length != destCols.length) {
+                throw new IllegalArgumentException("Mismatch in source and destination column count");
+            }
+
+            for (int i = 0; i < sourceCols.length; i++) {
+                String src = sourceCols[i].trim();
+                String dst = destCols[i].trim();
+
+                String raw = row.get(src);
+                if (raw != null && !raw.isBlank()) {
+                    String decrypted = new String(decryptAESGCNopadding(hexToByte(raw), oldKey.getBytes()));
+                    String encrypted = toHexString(encryptAESGCNopadding(decrypted.getBytes(), newKey.getBytes()));
+                    row.put(dst, encrypted);
+                }
             }
         }
 
         row.put("conversion_status", "Y");
+
     } catch (Exception e) {
         row.put("conversion_status", "C");
     }
 
+    // ✅ Preserve primary key from reader — no overwrite
     return row;
 }
