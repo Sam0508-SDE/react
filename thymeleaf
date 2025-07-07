@@ -358,3 +358,27 @@
     <p class="mt-3">Decrypted Value: <strong id="decryptedOutput" style="color: green;"></strong></p>
   </div>
 </div>
+
+
+
+function decryptValue() {
+  const input = document.getElementById("encryptedInput").value;
+  const keyType = document.getElementById("keyChoice").value;
+
+  fetch("/decrypt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ encryptedData: input, keyType: keyType })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.decryptedValue) {
+      document.getElementById("decryptedOutput").innerText = data.decryptedValue;
+    } else {
+      document.getElementById("decryptedOutput").innerText = "⚠️ Error decrypting!";
+    }
+  })
+  .catch(() => {
+    document.getElementById("decryptedOutput").innerText = "⚠️ Server error.";
+  });
+}
