@@ -340,3 +340,21 @@
 
 </body>
 </html>
+
+
+<div class="card mt-4">
+  <div class="card-body">
+    <h5 class="card-title">🔓 Decrypt AES Value</h5>
+    
+    <input type="text" class="form-control mb-2" id="encryptedInput" placeholder="Enter encrypted HEX" />
+
+    <select id="keyChoice" class="form-select mb-2">
+      <option value="old">Use Old Key</option>
+      <option value="new">Use New Key</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="decryptValue()">Decrypt</button>
+
+    <p class="mt-3">Decrypted Value: <strong id="decryptedOutput" style="color: green;"></strong></p>
+  </div>
+</div>
