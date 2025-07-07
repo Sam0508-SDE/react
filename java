@@ -393,3 +393,34 @@ writer.setItemSqlParameterSourceProvider(new ItemSqlParameterSourceProvider<>() 
         return paramSource;
     }
 }); so this will set destinatin column vlaue to encrypted values we set in processor 
+
+
+
+    @PostMapping("/decrypt")
+public ResponseEntity<Map<String, String>> decrypt(@RequestBody Map<String, String> payload) {
+    String encryptedData = payload.get("encryptedData");
+    String keyType = payload.get("keyType");
+
+    // Fetch latest job execution
+    JobExecution latestExecution = jobExplorer.getJobInstances("yourJobName", 0, 1)
+        .stream()
+        .findFirst()
+        .flatMap(id -> jobExplorer.getJobExecutions(id).stream().findFirst())
+        .orElse(null);
+
+    if (latestExecution == null) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Map.of("decryptedValue", "❌ No recent job found"));
+    }
+
+    String key = keyType.equalsIgnoreCase("old")
+        ? latestExecution.getJobParameters().getString("oldKey")
+        : latestExecution.getJobParameters().getString("newKey");
+
+    try {
+        byte[] decrypted = decryptAESGCMNoPadding(hexToByte(encryptedData), key.getBytes());
+        return ResponseEntity.ok(Map.of("decryptedValue", new String(decrypted)));
+    } catch (Exception e) {
+        return ResponseEntity.ok(Map.of("decryptedValue", "❌ Decryption failed"));
+    }
+}
