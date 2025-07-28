@@ -1,0 +1,126 @@
+QR Code Generator Service – Technical Documentation
+
+🧱 Overview
+
+This service enables generation of customized QR codes, with optional branding and preview, embedded as a dynamic UI (popup/modal) inside a parent application.
+	•	Backend: Spring Boot
+	•	Frontend: React (hosted separately or embedded)
+	•	Integration: Popup in parent app with JWT-based session
+	•	Deployment: Modular UI + API microservice
+
+⸻
+
+🖼️ Architecture Diagram
+
++------------------------+       +---------------------------+       +---------------------------+
+|   Parent Web App       | <---> |   QR Code UI (React)      | <---> |  QR Code API (Spring Boot)|
+| (User Logged In + JWT) |       |   (Popup/iframe UI)       |       |   /api/qrcode/generate    |
++------------------------+       +---------------------------+       +---------------------------+
+
+	•	JWT passed from Parent Web App → QR UI
+	•	QR UI communicates securely with Spring Boot APIs
+	•	QR generation happens server-side with ZXing, returning base64 or file
+
+⸻
+
+📁 Project Structure
+
+qr-service/
+├── backend/
+│   ├── controller/QRCodeController.java
+│   ├── service/QRCodeService.java
+│   ├── config/SecurityConfig.java
+│   ├── model/QRCodeRequest.java
+│   └── util/QRCodeUtil.java
+├── frontend/ (built externally)
+│   ├── App.jsx
+│   └── QRForm.jsx
+└── static/ (optional UI embed)
+
+
+⸻
+
+🔐 Session Management
+	•	Auth Model: JWT Token passed from parent app to popup UI
+	•	Token Transport:
+	•	via query param (?token=xyz), OR
+	•	via postMessage()
+	•	Token Usage: React frontend attaches JWT in API requests:
+
+fetch('/api/qrcode/generate', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`
+  },
+  body: formData
+});
+
+
+	•	Spring Security:
+
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable()
+        .authorizeRequests()
+        .antMatchers("/api/qrcode/**").authenticated()
+        .and()
+        .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+}
+
+
+⸻
+
+📤 QR Generation API
+
+Endpoint:
+
+POST /api/qrcode/generate
+
+Request:
+
+Content-Type: multipart/form-data
+
+{
+  "url": "https://example.com",
+  "name": "Cafe 88",
+  "headerText": "Welcome",
+  "footerText": "Scan to Join",
+  "bgColor": "#ffffff",
+  "imageSize": 256,
+  "logo": <file>,
+  "backgroundImage": <file>
+}
+
+Response:
+
+{
+  "qrCodeBase64": "data:image/png;base64,..."
+}
+
+
+⸻
+
+⚙️ Deployment Notes
+	•	Frontend can be deployed on Vercel/S3/static folder in Spring Boot
+	•	Backend exposed via HTTPS
+	•	JWT expiration and CORS headers should be configured securely
+
+⸻
+
+🧪 Testing Scenarios
+	•	Valid JWT with form data → returns QR code
+	•	Expired/missing JWT → 401 error
+	•	Custom header/footer rendering
+	•	Uploading large files rejected with 50MB max
+
+⸻
+
+🚀 Future Enhancements
+	•	Download QR code as PNG
+	•	Audit trail for generated codes
+	•	QR template presets
+	•	Admin dashboard for QR code management
+
+⸻
+
+For any integration help or backend changes, contact the QR API service owner.
