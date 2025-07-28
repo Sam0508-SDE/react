@@ -424,3 +424,87 @@ public ResponseEntity<Map<String, String>> decrypt(@RequestBody Map<String, Stri
         return ResponseEntity.ok(Map.of("decryptedValue", "❌ Decryption failed"));
     }
 }
+
+
+// Spring Boot Controller to handle the form submission
+package com.example.excelupdater.controller;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.*;
+
+@Controller
+public class ExcelUpdateController {
+
+    @PostMapping("/update")
+    public RedirectView updateExcel(@RequestParam String key,
+                                    @RequestParam String env,
+                                    @RequestParam String value,
+                                    @RequestParam String path) {
+        try (FileInputStream fis = new FileInputStream(path);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            int envCol = -1;
+
+            // Find column index for environment from header row
+            Row header = sheet.getRow(0);
+            for (Cell cell : header) {
+                if (cell.getStringCellValue().trim().equalsIgnoreCase(env)) {
+                    envCol = cell.getColumnIndex();
+                    break;
+                }
+            }
+
+            if (envCol == -1) {
+                return redirectWithMessage("error", "Environment not found in header row");
+            }
+
+            boolean updated = false;
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    Cell keyCell = row.getCell(0);
+                    if (keyCell != null && key.trim().equalsIgnoreCase(keyCell.getStringCellValue().trim())) {
+                        Cell valueCell = row.getCell(envCol);
+                        if (valueCell == null) valueCell = row.createCell(envCol);
+                        valueCell.setCellValue(value);
+                        updated = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!updated) {
+                return redirectWithMessage("error", "Key not found in sheet");
+            }
+
+            // Save the file
+            try (FileOutputStream fos = new FileOutputStream(path)) {
+                workbook.write(fos);
+            }
+
+            return redirectWithMessage("success", "Excel updated successfully");
+
+        } catch (IOException e) {
+            return redirectWithMessage("error", "Excel error: " + e.getMessage());
+        }
+    }
+
+    private RedirectView redirectWithMessage(String status, String msg) {
+        RedirectView rv = new RedirectView("/");
+        rv.addStaticAttribute("status", status);
+        rv.addStaticAttribute("msg", msg);
+        return rv;
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "index"; // index.html in src/main/resources/static
+    }
+}
