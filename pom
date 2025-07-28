@@ -4,47 +4,63 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- ✅ Spring Boot Parent POM -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.0</version>
+    <relativePath/>
+  </parent>
+
   <groupId>com.example</groupId>
   <artifactId>excel-updater</artifactId>
   <version>1.0.0</version>
-  <packaging>jar</packaging>
-
   <name>Excel Updater</name>
   <description>Spring Boot app to update Excel credentials via web UI</description>
 
   <properties>
     <java.version>17</java.version>
-    <spring-boot.version>3.2.0</spring-boot.version>
   </properties>
 
   <dependencies>
-    <!-- Spring Boot Web -->
+    <!-- ✅ Spring Boot Web Starter -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <version>3.2.0</version>
     </dependency>
 
-    <!-- Apache POI for Excel -->
+    <!-- ✅ Apache POI for Excel -->
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
       <version>5.2.3</version>
     </dependency>
 
-    <!-- Spring Boot Tools -->
+    <!-- ✅ Optional: Spring Boot DevTools -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
+      <version>3.2.0</version>
       <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Spring Boot Plugin -->
+      <!-- ✅ Spring Boot Maven Plugin -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
