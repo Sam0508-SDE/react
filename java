@@ -508,3 +508,187 @@ public class ExcelUpdateController {
         return "index"; // index.html in src/main/resources/static
     }
 }
+
+
+
+
+
+****************
+
+
+// =============================
+// 1. Spring Boot Main Class
+// =============================
+package com.excelupdater;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ExcelUpdaterVBSApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ExcelUpdaterVBSApplication.class, args);
+    }
+}
+
+// =============================
+// 2. Controller Class
+// =============================
+package com.excelupdater.controller;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.*;
+
+@Controller
+public class ExcelUpdateController {
+
+    private static final Map<String, List<String>> ENV_GROUPS = Map.of(
+        "nr", List.of("SLEDVTEC", "NREnv1"),
+        "qa", List.of("QA_COL1", "QA_COL2"),
+        "uat", List.of("UAT_COL"),
+        "perf", List.of("PERF_COL"),
+        "prod", List.of("PROD1", "PROD2")
+    );
+
+    private static final List<String> ALL_KEYS = List.of(
+        "INFONOX_FE_SNOX_USER", "SNOX_PASSWORD", "TNOX_USERNAME", "TNOX_PASSWORD",
+        "INFONOX_SNOX_DB_HIBERNATE_KEY", "INFONOX_SNOX_DB_HIBERNATE_ENC_PASSWORD",
+        "INFONOX_TNOX_DB_HIBERNATE_KEY", "INFONOX_TNOX_DB_HIBERNATE_ENC_PASSWORD"
+    );
+
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
+
+    @PostMapping("/update")
+    public RedirectView updateExcel(@RequestParam String path,
+                                    @RequestParam String env,
+                                    @RequestParam Map<String, String> formData) {
+        try (FileInputStream fis = new FileInputStream(path);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Row header = sheet.getRow(0);
+
+            Map<String, Integer> envColMap = new HashMap<>();
+            for (Cell cell : header) {
+                for (String colName : ENV_GROUPS.getOrDefault(env.toLowerCase(), List.of())) {
+                    if (cell.getStringCellValue().trim().equalsIgnoreCase(colName)) {
+                        envColMap.put(colName, cell.getColumnIndex());
+                    }
+                }
+            }
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+                Cell keyCell = row.getCell(0);
+                if (keyCell == null) continue;
+                String key = keyCell.getStringCellValue().trim();
+
+                if (ALL_KEYS.contains(key)) {
+                    String value = formData.get(key);
+                    if (value == null || value.isBlank()) continue;
+
+                    for (Integer colIndex : envColMap.values()) {
+                        Cell updateCell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        updateCell.setCellValue(value);
+                    }
+                }
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(path)) {
+                workbook.write(fos);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return redirectWithMessage("error", e.getMessage());
+        }
+
+        return redirectWithMessage("success", "Excel updated successfully!");
+    }
+
+    private RedirectView redirectWithMessage(String status, String msg) {
+        RedirectView rv = new RedirectView("/");
+        rv.addStaticAttribute("status", status);
+        rv.addStaticAttribute("msg", msg);
+        return rv;
+    }
+}
+
+// =============================
+// 3. index.html (in resources/static)
+// =============================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credential Excel Updater</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+  <div class="container mt-5" style="max-width: 600px">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">🔐 Credential Excel Updater</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="/update">
+          <div class="mb-3">
+            <label for="path" class="form-label">Excel File Path</label>
+            <input type="text" class="form-control" id="path" name="path" required>
+          </div>
+          <div class="mb-3">
+            <label for="env" class="form-label">Environment Group</label>
+            <select class="form-select" name="env" id="env" required>
+              <option value="">Select Environment Group</option>
+              <option value="nr">NR</option>
+              <option value="qa">QA</option>
+              <option value="uat">UAT</option>
+              <option value="perf">Performance</option>
+              <option value="prod">Production</option>
+            </select>
+          </div>
+
+          <!-- Dynamically render all known keys as inputs -->
+          <div class="mb-3">
+            <label class="form-label">Update Values</label>
+            <div class="row">
+              <!-- Repeat below input block for each key -->
+              <div class="col-12 mb-2">
+                <label class="form-label">INFONOX_FE_SNOX_USER</label>
+                <input type="text" class="form-control" name="INFONOX_FE_SNOX_USER">
+              </div>
+              <div class="col-12 mb-2">
+                <label class="form-label">SNOX_PASSWORD</label>
+                <input type="text" class="form-control" name="SNOX_PASSWORD">
+              </div>
+              <div class="col-12 mb-2">
+                <label class="form-label">TNOX_USERNAME</label>
+                <input type="text" class="form-control" name="TNOX_USERNAME">
+              </div>
+              <div class="col-12 mb-2">
+                <label class="form-label">TNOX_PASSWORD</label>
+                <input type="text" class="form-control" name="TNOX_PASSWORD">
+              </div>
+              <!-- Add remaining keys similarly -->
+            </div>
+          </div>
+
+          <button class="btn btn-success w-100">✅ Update Excel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
