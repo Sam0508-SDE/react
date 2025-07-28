@@ -1,7 +1,6 @@
 QR Code Generator Service – Technical Documentation
 
-🧱 Overview
-
+Overview
 This service enables generation of customized QR codes, with optional branding and preview, embedded as a dynamic UI (popup/modal) inside a parent application.
 	•	Backend: Spring Boot
 	•	Frontend: React (hosted separately or embedded)
@@ -10,7 +9,7 @@ This service enables generation of customized QR codes, with optional branding a
 
 ⸻
 
-🖼️ Architecture Diagram
+Architecture Diagram
 
 +------------------------+       +---------------------------+       +---------------------------+
 |   Parent Web App       | <---> |   QR Code UI (React)      | <---> |  QR Code API (Spring Boot)|
@@ -23,7 +22,7 @@ This service enables generation of customized QR codes, with optional branding a
 
 ⸻
 
-📁 Project Structure
+Project Structure
 
 qr-service/
 ├── backend/
@@ -40,7 +39,7 @@ qr-service/
 
 ⸻
 
-🔐 Session Management
+Session Management
 	•	Auth Model: JWT Token passed from parent app to popup UI
 	•	Token Transport:
 	•	via query param (?token=xyz), OR
@@ -54,7 +53,6 @@ fetch('/api/qrcode/generate', {
   },
   body: formData
 });
-
 
 	•	Spring Security:
 
@@ -70,10 +68,9 @@ protected void configure(HttpSecurity http) throws Exception {
 
 ⸻
 
-📤 QR Generation API
+QR Generation API
 
 Endpoint:
-
 POST /api/qrcode/generate
 
 Request:
@@ -100,14 +97,14 @@ Response:
 
 ⸻
 
-⚙️ Deployment Notes
-	•	Frontend can be deployed on Vercel/S3/static folder in Spring Boot
-	•	Backend exposed via HTTPS
-	•	JWT expiration and CORS headers should be configured securely
+Deployment Notes
+	•	Frontend can be deployed on Vercel, S3, or inside Spring Boot /static folder
+	•	Backend should be served over HTTPS
+	•	Ensure secure CORS and JWT expiration handling
 
 ⸻
 
-🧪 Testing Scenarios
+Testing Scenarios
 	•	Valid JWT with form data → returns QR code
 	•	Expired/missing JWT → 401 error
 	•	Custom header/footer rendering
@@ -115,7 +112,7 @@ Response:
 
 ⸻
 
-🚀 Future Enhancements
+Future Enhancements
 	•	Download QR code as PNG
 	•	Audit trail for generated codes
 	•	QR template presets
