@@ -692,3 +692,14 @@ public class ExcelUpdateController {
   </div>
 </body>
 </html>
+
+
+
+    Workbook workbook;
+if (filePath.endsWith(".xlsx")) {
+    workbook = new XSSFWorkbook(fileInputStream); // for .xlsx
+} else if (filePath.endsWith(".xls")) {
+    workbook = new HSSFWorkbook(fileInputStream); // for .xls
+} else {
+    throw new IllegalArgumentException("Invalid Excel file format");
+}
