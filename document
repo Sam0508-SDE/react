@@ -121,3 +121,25 @@ Future Enhancements
 ⸻
 
 For any integration help or backend changes, contact the QR API service owner.
+
+
+@startuml
+title QR Code Generator Architecture
+
+actor User
+
+rectangle "Parent Web App\n(Session + Auth)" as WebApp {
+    User --> WebApp : Logged in\nPasses JWT
+}
+
+rectangle "QR Code UI\n(React App as Popup)" as QRUI {
+    WebApp --> QRUI : Pass JWT (postMessage or query param)
+}
+
+rectangle "QR Code API\n(Spring Boot)" as API {
+    QRUI --> API : POST /api/qrcode/generate\n(with JWT)
+}
+
+API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
+
+@enduml
