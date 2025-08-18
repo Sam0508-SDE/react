@@ -150,25 +150,60 @@ API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
 
 ={
  {"System","Date","Severity","Count"};
- FLATTEN(
-   SPLIT(
-     BYROW(
-       SEQUENCE(1, COLUMNS(Dashboard!B1:1)/2),
-       LAMBDA(c,
-         {
-           INDEX(Dashboard!B1:1, 1, 2*c-1) & "|" &
-           FILTER(Dashboard!B5:B, LEN(Dashboard!B5:B)) & "|" &
-           "Critical" & "|" &
-           FILTER(INDEX(Dashboard!B5:B, , 2*c), LEN(INDEX(Dashboard!B5:B, , 2*c)));
-           
-           INDEX(Dashboard!B1:1, 1, 2*c-1) & "|" &
-           FILTER(Dashboard!B5:B, LEN(Dashboard!B5:B)) & "|" &
-           "High" & "|" &
-           FILTER(INDEX(Dashboard!B5:B, , 2*c+1), LEN(INDEX(Dashboard!B5:B, , 2*c+1)))
-         }
-       )
-     ),
-     "|"
-   )
- )
+
+ /* Transnox */
+ FILTER({"Transnox",       'Dashboard'!B5:B,  "Critical", 'Dashboard'!C5:C},  LEN('Dashboard'!B5:B));
+ FILTER({"Transnox",       'Dashboard'!B5:B,  "High",     'Dashboard'!D5:D},  LEN('Dashboard'!B5:B));
+
+ /* busn-core */
+ FILTER({"busn-core",      'Dashboard'!F5:F,  "Critical", 'Dashboard'!G5:G},  LEN('Dashboard'!F5:F));
+ FILTER({"busn-core",      'Dashboard'!F5:F,  "High",     'Dashboard'!H5:H},  LEN('Dashboard'!F5:F));
+
+ /* busn-customer */
+ FILTER({"busn-customer",  'Dashboard'!J5:J,  "Critical", 'Dashboard'!K5:K},  LEN('Dashboard'!J5:J));
+ FILTER({"busn-customer",  'Dashboard'!J5:J,  "High",     'Dashboard'!L5:L},  LEN('Dashboard'!J5:J));
+
+ /* busn-product */
+ FILTER({"busn-product",   'Dashboard'!N5:N,  "Critical", 'Dashboard'!O5:O},  LEN('Dashboard'!N5:N));
+ FILTER({"busn-product",   'Dashboard'!N5:N,  "High",     'Dashboard'!P5:P},  LEN('Dashboard'!N5:N));
+
+ /* busn-transaction */
+ FILTER({"busn-transaction",'Dashboard'!B28:B,"Critical", 'Dashboard'!C28:C}, LEN('Dashboard'!B28:B));
+ FILTER({"busn-transaction",'Dashboard'!B28:B,"High",     'Dashboard'!D28:D}, LEN('Dashboard'!B28:B));
+
+ /* busn-user */
+ FILTER({"busn-user",      'Dashboard'!F28:F,"Critical",  'Dashboard'!G28:G}, LEN('Dashboard'!F28:F));
+ FILTER({"busn-user",      'Dashboard'!F28:F,"High",      'Dashboard'!H28:H}, LEN('Dashboard'!F28:F));
+
+ /* transit-core */
+ FILTER({"transit-core",   'Dashboard'!J28:J,"Critical",  'Dashboard'!K28:K}, LEN('Dashboard'!J28:J));
+ FILTER({"transit-core",   'Dashboard'!J28:J,"High",      'Dashboard'!L28:L}, LEN('Dashboard'!J28:J));
+
+ /* transit-integration */
+ FILTER({"transit-integration",'Dashboard'!N28:N,"Critical",'Dashboard'!O28:O}, LEN('Dashboard'!N28:N));
+ FILTER({"transit-integration",'Dashboard'!N28:N,"High",    'Dashboard'!P28:P}, LEN('Dashboard'!N28:N));
+
+ /* transit-parent */
+ FILTER({"transit-parent", 'Dashboard'!B54:B,"Critical",  'Dashboard'!C54:C}, LEN('Dashboard'!B54:B));
+ FILTER({"transit-parent", 'Dashboard'!B54:B,"High",      'Dashboard'!D54:D}, LEN('Dashboard'!B54:B));
+
+ /* transit-security */
+ FILTER({"transit-security",'Dashboard'!F54:F,"Critical", 'Dashboard'!G54:G}, LEN('Dashboard'!F54:F));
+ FILTER({"transit-security",'Dashboard'!F54:F,"High",     'Dashboard'!H54:H}, LEN('Dashboard'!F54:F));
+
+ /* transit-utils */
+ FILTER({"transit-utils",  'Dashboard'!J54:J,"Critical",  'Dashboard'!K54:K}, LEN('Dashboard'!J54:J));
+ FILTER({"transit-utils",  'Dashboard'!J54:J,"High",      'Dashboard'!L54:L}, LEN('Dashboard'!J54:J));
+
+ /* busn-batch */
+ FILTER({"busn-batch",     'Dashboard'!N54:N,"Critical",  'Dashboard'!O54:O}, LEN('Dashboard'!N54:N));
+ FILTER({"busn-batch",     'Dashboard'!N54:N,"High",      'Dashboard'!P54:P}, LEN('Dashboard'!N54:N));
+
+ /* keynox */
+ FILTER({"keynox",         'Dashboard'!B77:B,"Critical",  'Dashboard'!C77:C}, LEN('Dashboard'!B77:B));
+ FILTER({"keynox",         'Dashboard'!B77:B,"High",      'Dashboard'!D77:D}, LEN('Dashboard'!B77:B));
+
+ /* keymanager */
+ FILTER({"keymanager",     'Dashboard'!F77:F,"Critical",  'Dashboard'!G77:G}, LEN('Dashboard'!F77:F));
+ FILTER({"keymanager",     'Dashboard'!F77:F,"High",      'Dashboard'!H77:H}, LEN('Dashboard'!F77:F))
 }
