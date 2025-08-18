@@ -143,3 +143,18 @@ rectangle "QR Code API\n(Spring Boot)" as API {
 API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
 
 @enduml
+
+
+
+
+
+={
+ QUERY({dashboard!B5:B7,"Critical",dashboard!C5:C7; dashboard!B5:B7,"High",dashboard!D5:D7},
+       "select 'Transnox', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({dashboard!F5:F8,"Critical",dashboard!G5:G8; dashboard!F5:F8,"High",dashboard!H5:H8},
+       "select 'busn-core', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({dashboard!B28:B30,"Critical",dashboard!C28:C30; dashboard!B28:B30,"High",dashboard!D28:D30},
+       "select 'busn-transaction', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({dashboard!F28:F29,"Critical",dashboard!G28:G29; dashboard!F28:F29,"High",dashboard!H28:H29},
+       "select 'busn-user', Col1, Col2, Col3 where Col1 is not null",0)
+}
