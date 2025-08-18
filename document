@@ -155,6 +155,6 @@ API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
        "select 'busn-core', Col1, Col2, Col3 where Col1 is not null",0);
  QUERY({dashboard!B28:B30,"Critical",dashboard!C28:C30; dashboard!B28:B30,"High",dashboard!D28:D30},
        "select 'busn-transaction', Col1, Col2, Col3 where Col1 is not null",0);
- QUERY({dashboard!F28:F29,"Critical",dashboard!G28:G29; dashboard!F28:F29,"High",dashboard!H28:H29},
+ QUERY({dashboard!F28:F29,"Critical",dashboard!G28:F29; dashboard!F28:F29,"High",dashboard!H28:H29},
        "select 'busn-user', Col1, Col2, Col3 where Col1 is not null",0)
 }
