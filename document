@@ -147,63 +147,86 @@ API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
 
 
 
+=LET(
+  /* ---- Top band (rows 5–27) ---- */
+  tnx_d, 'Dashboard'!B5:B27, tnx_c, 'Dashboard'!C5:C27, tnx_h, 'Dashboard'!D5:D27,
+  bcore_d, 'Dashboard'!F5:F27, bcore_c, 'Dashboard'!G5:G27, bcore_h, 'Dashboard'!H5:H27,
+  bcust_d, 'Dashboard'!J5:J27, bcust_c, 'Dashboard'!K5:K27, bcust_h, 'Dashboard'!L5:L27,
+  bprod_d, 'Dashboard'!N5:N27, bprod_c, 'Dashboard'!O5:O27, bprod_h, 'Dashboard'!P5:P27,
 
-={
- {"System","Date","Severity","Count"};
+  /* ---- Middle band (rows 28–53) ---- */
+  btxn_d, 'Dashboard'!B28:B53, btxn_c, 'Dashboard'!C28:C53, btxn_h, 'Dashboard'!D28:D53,
+  buser_d, 'Dashboard'!F28:F53, buser_c, 'Dashboard'!G28:G53, buser_h, 'Dashboard'!H28:H53,
+  tcore_d, 'Dashboard'!J28:J53, tcore_c, 'Dashboard'!K28:K53, tcore_h, 'Dashboard'!L28:L53,
+  tint_d, 'Dashboard'!N28:N53, tint_c, 'Dashboard'!O28:O53, tint_h, 'Dashboard'!P28:P53,
 
- /* Transnox */
- FILTER({"Transnox",       'Dashboard'!B5:B,  "Critical", 'Dashboard'!C5:C},  LEN('Dashboard'!B5:B));
- FILTER({"Transnox",       'Dashboard'!B5:B,  "High",     'Dashboard'!D5:D},  LEN('Dashboard'!B5:B));
+  /* ---- Lower band (rows 54–76) ---- */
+  tpar_d, 'Dashboard'!B54:B76, tpar_c, 'Dashboard'!C54:C76, tpar_h, 'Dashboard'!D54:D76,
+  tsec_d, 'Dashboard'!F54:F76, tsec_c, 'Dashboard'!G54:G76, tsec_h, 'Dashboard'!H54:H76,
+  tutil_d, 'Dashboard'!J54:J76, tutil_c, 'Dashboard'!K54:K76, tutil_h, 'Dashboard'!L54:L76,
+  bbat_d, 'Dashboard'!N54:N76, bbat_c, 'Dashboard'!O54:O76, bbat_h, 'Dashboard'!P54:P76,
 
- /* busn-core */
- FILTER({"busn-core",      'Dashboard'!F5:F,  "Critical", 'Dashboard'!G5:G},  LEN('Dashboard'!F5:F));
- FILTER({"busn-core",      'Dashboard'!F5:F,  "High",     'Dashboard'!H5:H},  LEN('Dashboard'!F5:F));
+  /* ---- Bottom band (rows 77–80) - adjust end row if you add more ---- */
+  knox_d, 'Dashboard'!B77:B80, knox_c, 'Dashboard'!C77:C80, knox_h, 'Dashboard'!D77:D80,
+  kman_d, 'Dashboard'!F77:F80, kman_c, 'Dashboard'!G77:G80, kman_h, 'Dashboard'!H77:H80,
 
- /* busn-customer */
- FILTER({"busn-customer",  'Dashboard'!J5:J,  "Critical", 'Dashboard'!K5:K},  LEN('Dashboard'!J5:J));
- FILTER({"busn-customer",  'Dashboard'!J5:J,  "High",     'Dashboard'!L5:L},  LEN('Dashboard'!J5:J));
+  VSTACK(
+    {"System","Date","Severity","Count"},
 
- /* busn-product */
- FILTER({"busn-product",   'Dashboard'!N5:N,  "Critical", 'Dashboard'!O5:O},  LEN('Dashboard'!N5:N));
- FILTER({"busn-product",   'Dashboard'!N5:N,  "High",     'Dashboard'!P5:P},  LEN('Dashboard'!N5:N));
+    /* Transnox */
+    FILTER( HSTACK( IF(LEN(tnx_d),"Transnox",), tnx_d, IF(LEN(tnx_d),"Critical",), tnx_c ), LEN(tnx_d) ),
+    FILTER( HSTACK( IF(LEN(tnx_d),"Transnox",), tnx_d, IF(LEN(tnx_d),"High",),     tnx_h ), LEN(tnx_d) ),
 
- /* busn-transaction */
- FILTER({"busn-transaction",'Dashboard'!B28:B,"Critical", 'Dashboard'!C28:C}, LEN('Dashboard'!B28:B));
- FILTER({"busn-transaction",'Dashboard'!B28:B,"High",     'Dashboard'!D28:D}, LEN('Dashboard'!B28:B));
+    /* busn-core */
+    FILTER( HSTACK( IF(LEN(bcore_d),"busn-core",), bcore_d, IF(LEN(bcore_d),"Critical",), bcore_c ), LEN(bcore_d) ),
+    FILTER( HSTACK( IF(LEN(bcore_d),"busn-core",), bcore_d, IF(LEN(bcore_d),"High",),     bcore_h ), LEN(bcore_d) ),
 
- /* busn-user */
- FILTER({"busn-user",      'Dashboard'!F28:F,"Critical",  'Dashboard'!G28:G}, LEN('Dashboard'!F28:F));
- FILTER({"busn-user",      'Dashboard'!F28:F,"High",      'Dashboard'!H28:H}, LEN('Dashboard'!F28:F));
+    /* busn-customer */
+    FILTER( HSTACK( IF(LEN(bcust_d),"busn-customer",), bcust_d, IF(LEN(bcust_d),"Critical",), bcust_c ), LEN(bcust_d) ),
+    FILTER( HSTACK( IF(LEN(bcust_d),"busn-customer",), bcust_d, IF(LEN(bcust_d),"High",),     bcust_h ), LEN(bcust_d) ),
 
- /* transit-core */
- FILTER({"transit-core",   'Dashboard'!J28:J,"Critical",  'Dashboard'!K28:K}, LEN('Dashboard'!J28:J));
- FILTER({"transit-core",   'Dashboard'!J28:J,"High",      'Dashboard'!L28:L}, LEN('Dashboard'!J28:J));
+    /* busn-product */
+    FILTER( HSTACK( IF(LEN(bprod_d),"busn-product",), bprod_d, IF(LEN(bprod_d),"Critical",), bprod_c ), LEN(bprod_d) ),
+    FILTER( HSTACK( IF(LEN(bprod_d),"busn-product",), bprod_d, IF(LEN(bprod_d),"High",),     bprod_h ), LEN(bprod_d) ),
 
- /* transit-integration */
- FILTER({"transit-integration",'Dashboard'!N28:N,"Critical",'Dashboard'!O28:O}, LEN('Dashboard'!N28:N));
- FILTER({"transit-integration",'Dashboard'!N28:N,"High",    'Dashboard'!P28:P}, LEN('Dashboard'!N28:N));
+    /* busn-transaction */
+    FILTER( HSTACK( IF(LEN(btxn_d),"busn-transaction",), btxn_d, IF(LEN(btxn_d),"Critical",), btxn_c ), LEN(btxn_d) ),
+    FILTER( HSTACK( IF(LEN(btxn_d),"busn-transaction",), btxn_d, IF(LEN(btxn_d),"High",),     btxn_h ), LEN(btxn_d) ),
 
- /* transit-parent */
- FILTER({"transit-parent", 'Dashboard'!B54:B,"Critical",  'Dashboard'!C54:C}, LEN('Dashboard'!B54:B));
- FILTER({"transit-parent", 'Dashboard'!B54:B,"High",      'Dashboard'!D54:D}, LEN('Dashboard'!B54:B));
+    /* busn-user */
+    FILTER( HSTACK( IF(LEN(buser_d),"busn-user",), buser_d, IF(LEN(buser_d),"Critical",), buser_c ), LEN(buser_d) ),
+    FILTER( HSTACK( IF(LEN(buser_d),"busn-user",), buser_d, IF(LEN(buser_d),"High",),     buser_h ), LEN(buser_d) ),
 
- /* transit-security */
- FILTER({"transit-security",'Dashboard'!F54:F,"Critical", 'Dashboard'!G54:G}, LEN('Dashboard'!F54:F));
- FILTER({"transit-security",'Dashboard'!F54:F,"High",     'Dashboard'!H54:H}, LEN('Dashboard'!F54:F));
+    /* transit-core */
+    FILTER( HSTACK( IF(LEN(tcore_d),"transit-core",), tcore_d, IF(LEN(tcore_d),"Critical",), tcore_c ), LEN(tcore_d) ),
+    FILTER( HSTACK( IF(LEN(tcore_d),"transit-core",), tcore_d, IF(LEN(tcore_d),"High",),     tcore_h ), LEN(tcore_d) ),
 
- /* transit-utils */
- FILTER({"transit-utils",  'Dashboard'!J54:J,"Critical",  'Dashboard'!K54:K}, LEN('Dashboard'!J54:J));
- FILTER({"transit-utils",  'Dashboard'!J54:J,"High",      'Dashboard'!L54:L}, LEN('Dashboard'!J54:J));
+    /* transit-integration */
+    FILTER( HSTACK( IF(LEN(tint_d),"transit-integration",), tint_d, IF(LEN(tint_d),"Critical",), tint_c ), LEN(tint_d) ),
+    FILTER( HSTACK( IF(LEN(tint_d),"transit-integration",), tint_d, IF(LEN(tint_d),"High",),     tint_h ), LEN(tint_d) ),
 
- /* busn-batch */
- FILTER({"busn-batch",     'Dashboard'!N54:N,"Critical",  'Dashboard'!O54:O}, LEN('Dashboard'!N54:N));
- FILTER({"busn-batch",     'Dashboard'!N54:N,"High",      'Dashboard'!P54:P}, LEN('Dashboard'!N54:N));
+    /* transit-parent */
+    FILTER( HSTACK( IF(LEN(tpar_d),"transit-parent",), tpar_d, IF(LEN(tpar_d),"Critical",), tpar_c ), LEN(tpar_d) ),
+    FILTER( HSTACK( IF(LEN(tpar_d),"transit-parent",), tpar_d, IF(LEN(tpar_d),"High",),     tpar_h ), LEN(tpar_d) ),
 
- /* keynox */
- FILTER({"keynox",         'Dashboard'!B77:B,"Critical",  'Dashboard'!C77:C}, LEN('Dashboard'!B77:B));
- FILTER({"keynox",         'Dashboard'!B77:B,"High",      'Dashboard'!D77:D}, LEN('Dashboard'!B77:B));
+    /* transit-security */
+    FILTER( HSTACK( IF(LEN(tsec_d),"transit-security",), tsec_d, IF(LEN(tsec_d),"Critical",), tsec_c ), LEN(tsec_d) ),
+    FILTER( HSTACK( IF(LEN(tsec_d),"transit-security",), tsec_d, IF(LEN(tsec_d),"High",),     tsec_h ), LEN(tsec_d) ),
 
- /* keymanager */
- FILTER({"keymanager",     'Dashboard'!F77:F,"Critical",  'Dashboard'!G77:G}, LEN('Dashboard'!F77:F));
- FILTER({"keymanager",     'Dashboard'!F77:F,"High",      'Dashboard'!H77:H}, LEN('Dashboard'!F77:F))
-}
+    /* transit-utils */
+    FILTER( HSTACK( IF(LEN(tutil_d),"transit-utils",), tutil_d, IF(LEN(tutil_d),"Critical",), tutil_c ), LEN(tutil_d) ),
+    FILTER( HSTACK( IF(LEN(tutil_d),"transit-utils",), tutil_d, IF(LEN(tutil_d),"High",),     tutil_h ), LEN(tutil_d) ),
+
+    /* busn-batch */
+    FILTER( HSTACK( IF(LEN(bbat_d),"busn-batch",), bbat_d, IF(LEN(bbat_d),"Critical",), bbat_c ), LEN(bbat_d) ),
+    FILTER( HSTACK( IF(LEN(bbat_d),"busn-batch",), bbat_d, IF(LEN(bbat_d),"High",),     bbat_h ), LEN(bbat_d) ),
+
+    /* keynox */
+    FILTER( HSTACK( IF(LEN(knox_d),"keynox",), knox_d, IF(LEN(knox_d),"Critical",), knox_c ), LEN(knox_d) ),
+    FILTER( HSTACK( IF(LEN(knox_d),"keynox",), knox_d, IF(LEN(knox_d),"High",),     knox_h ), LEN(knox_d) ),
+
+    /* keymanager */
+    FILTER( HSTACK( IF(LEN(kman_d),"keymanager",), kman_d, IF(LEN(kman_d),"Critical",), kman_c ), LEN(kman_d) ),
+    FILTER( HSTACK( IF(LEN(kman_d),"keymanager",), kman_d, IF(LEN(kman_d),"High",),     kman_h ), LEN(kman_d) )
+  )
+)
