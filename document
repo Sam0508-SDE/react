@@ -149,12 +149,32 @@ API --> API : Generate QR (ZXing)\nReturn Base64 / PNG
 
 
 ={
- QUERY({dashboard!B5:B7,"Critical",dashboard!C5:C7; dashboard!B5:B7,"High",dashboard!D5:D7},
+ QUERY({Dashboard!B5:B7,"Critical",Dashboard!C5:C7; Dashboard!B5:B7,"High",Dashboard!D5:D7},
        "select 'Transnox', Col1, Col2, Col3 where Col1 is not null",0);
- QUERY({dashboard!F5:F8,"Critical",dashboard!G5:G8; dashboard!F5:F8,"High",dashboard!H5:H8},
+ QUERY({Dashboard!F5:F8,"Critical",Dashboard!G5:G8; Dashboard!F5:F8,"High",Dashboard!H5:H8},
        "select 'busn-core', Col1, Col2, Col3 where Col1 is not null",0);
- QUERY({dashboard!B28:B30,"Critical",dashboard!C28:C30; dashboard!B28:B30,"High",dashboard!D28:D30},
+ QUERY({Dashboard!J5:J8,"Critical",Dashboard!K5:K8; Dashboard!J5:J8,"High",Dashboard!L5:L8},
+       "select 'busn-customer', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!N5:N8,"Critical",Dashboard!O5:O8; Dashboard!N5:N8,"High",Dashboard!P5:P8},
+       "select 'busn-product', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!B28:B30,"Critical",Dashboard!C28:C30; Dashboard!B28:B30,"High",Dashboard!D28:D30},
        "select 'busn-transaction', Col1, Col2, Col3 where Col1 is not null",0);
- QUERY({dashboard!F28:F29,"Critical",dashboard!G28:F29; dashboard!F28:F29,"High",dashboard!H28:H29},
-       "select 'busn-user', Col1, Col2, Col3 where Col1 is not null",0)
+ QUERY({Dashboard!F28:F29,"Critical",Dashboard!G28:G29; Dashboard!F28:F29,"High",Dashboard!H28:H29},
+       "select 'busn-user', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!J28:J30,"Critical",Dashboard!K28:K30; Dashboard!J28:J30,"High",Dashboard!L28:L30},
+       "select 'transit-core', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!N28:N30,"Critical",Dashboard!O28:O30; Dashboard!N28:N30,"High",Dashboard!P28:P30},
+       "select 'transit-integration', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!B54:B56,"Critical",Dashboard!C54:C56; Dashboard!B54:B56,"High",Dashboard!D54:D56},
+       "select 'transit-parent', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!F54:F57,"Critical",Dashboard!G54:G57; Dashboard!F54:F57,"High",Dashboard!H54:H57},
+       "select 'transit-security', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!J54:J56,"Critical",Dashboard!K54:K56; Dashboard!J54:J56,"High",Dashboard!L54:L56},
+       "select 'transit-utils', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!N54:N56,"Critical",Dashboard!O54:O56; Dashboard!N54:N56,"High",Dashboard!P54:P56},
+       "select 'busn-batch', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!B77:B79,"Critical",Dashboard!C77:C79; Dashboard!B77:B79,"High",Dashboard!D77:D79},
+       "select 'keynox', Col1, Col2, Col3 where Col1 is not null",0);
+ QUERY({Dashboard!F77:F80,"Critical",Dashboard!G77:G80; Dashboard!F77:F80,"High",Dashboard!H77:H80},
+       "select 'keymanager', Col1, Col2, Col3 where Col1 is not null",0)
 }
