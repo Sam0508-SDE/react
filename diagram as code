@@ -34,3 +34,33 @@ flowchart LR
     svc_gw_api -- post auth --> svc_qr_api
     svc_gw_api --> pod_gw_api_1 & pod_gw_api_2
     svc_qr_api --> pod_qr_api_1 & pod_qr_api_2
+
+
+
+
+
+
+sequenceDiagram
+    autonumber
+    participant U as User
+    participant F5 as F5
+    participant IGW as Ingress
+    participant GW as Gateway
+    participant UI as qr ui
+    participant G as gw api
+    participant A as qr api
+
+    U->>F5: GET /
+    F5->>IGW: forward TLS
+    IGW->>GW: route by host
+    GW->>UI: deliver app
+    UI-->>U: HTML JS CSS
+
+    note over U,UI: App makes API request
+    U->>F5: XHR /api/...
+    F5->>IGW: forward TLS
+    IGW->>GW: route /api/*
+    GW->>G: gw api
+    G->>A: forward (post auth)
+    A-->>G: data
+    G-->>U: API response
