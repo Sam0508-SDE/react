@@ -42,25 +42,27 @@ flowchart LR
 
 sequenceDiagram
     autonumber
-    participant U as User
+    participant U as User (Browser)
     participant F5 as F5
     participant IGW as Ingress
     participant GW as Gateway
-    participant UI as qr ui
+    participant UI as qr ui (Service)
     participant G as gw api
     participant A as qr api
 
+    %% Initial page load
     U->>F5: GET /
     F5->>IGW: forward TLS
     IGW->>GW: route by host
-    GW->>UI: deliver app
-    UI-->>U: HTML JS CSS
+    GW->>UI: / → qr ui
+    UI-->>U: HTML + JS + CSS
 
-    note over U,UI: App makes API request
-    U->>F5: XHR /api/...
+    %% Browser app now active
+    note over U: Browser app makes API call
+    U->>F5: GET /api/...
     F5->>IGW: forward TLS
     IGW->>GW: route /api/*
-    GW->>G: gw api
-    G->>A: forward (post auth)
+    GW->>G: gw api (auth check)
+    G->>A: forward to qr api
     A-->>G: data
-    G-->>U: API response
+    G-->>U: JSON response
