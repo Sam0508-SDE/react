@@ -1,0 +1,36 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+ subgraph qr_ui_group["qr ui"]
+        svc_qr_ui["Service qr ui"]
+        pod_qr_ui_1["Pod qr ui 1"]
+        pod_qr_ui_2["Pod qr ui 2"]
+  end
+ subgraph gw_api_group["gw api"]
+        svc_gw_api["Service gw api"]
+        pod_gw_api_1["Pod gw api 1"]
+        pod_gw_api_2["Pod gw api 2"]
+  end
+ subgraph qr_api_group["qr api"]
+        svc_qr_api["Service qr api"]
+        pod_qr_api_1["Pod qr api 1"]
+        pod_qr_api_2["Pod qr api 2"]
+  end
+ subgraph k8s["RKE2 Kubernetes"]
+        igw["Istio IngressGateway"]
+        gw["Istio Gateway"]
+        qr_ui_group
+        gw_api_group
+        qr_api_group
+  end
+    user["User"] --> f5["F5 WAF"]
+    f5 --> igw
+    igw --> gw
+    gw --> svc_qr_ui
+    svc_qr_ui --> pod_qr_ui_1 & pod_qr_ui_2
+    svc_qr_ui -- calls --> svc_gw_api
+    svc_gw_api -- post auth --> svc_qr_api
+    svc_gw_api --> pod_gw_api_1 & pod_gw_api_2
+    svc_qr_api --> pod_qr_api_1 & pod_qr_api_2
