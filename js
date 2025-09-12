@@ -29,11 +29,31 @@
 <body>
   <h1>✅ Your Todos</h1>
 
+  <div class="row" role="group" aria-label="Add todo">
+    <label for="todoInput" class="sr">Add a task</label>
+    <input id="todoInput" type="text" placeholder="Add a task and press Enter…" />
+    <button id="addBtn" type="button">Add</button>
+  </div>
+
+  <ul id="todoList" aria-live="polite" aria-label="Todo list"></ul>
+
+  <div class="filters">
+    <span id="leftCount" class="muted">0 items left</span>
+    <div style="flex:1"></div>
+    <button data-filter="all" class="filter-btn active" type="button">All</button>
+    <button data-filter="active" class="filter-btn" type="button">Active</button>
+    <button data-filter="completed" class="filter-btn" type="button">Completed</button>
+    <button id="clearCompleted" type="button" title="Remove all completed">Clear Completed</button>
+  </div>
+
+  <!-- Load external JS file (same folder) -->
+  <script src="./todo.js"></script>
+</body>
+</html>
 
 
 
 ****************************************************************************************************************
-
 
 (function () {
   // --- State & Persistence ---
@@ -199,25 +219,3 @@
   // First render
   render();
 })();
-
-  <div class="row" role="group" aria-label="Add todo">
-    <label for="todoInput" class="sr">Add a task</label>
-    <input id="todoInput" type="text" placeholder="Add a task and press Enter…" />
-    <button id="addBtn" type="button">Add</button>
-  </div>
-
-  <ul id="todoList" aria-live="polite" aria-label="Todo list"></ul>
-
-  <div class="filters">
-    <span id="leftCount" class="muted">0 items left</span>
-    <div style="flex:1"></div>
-    <button data-filter="all" class="filter-btn active" type="button">All</button>
-    <button data-filter="active" class="filter-btn" type="button">Active</button>
-    <button data-filter="completed" class="filter-btn" type="button">Completed</button>
-    <button id="clearCompleted" type="button" title="Remove all completed">Clear Completed</button>
-  </div>
-
-  <!-- Load external JS file (same folder) -->
-  <script src="./todo.js"></script>
-</body>
-</html>
