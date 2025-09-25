@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant MC-server as MC (server)
+  participant Auth as Auth Service (/auth)
+  participant Portal-BE as Portal Backend
+  participant Iframe as Portal Iframe (browser)
+  participant API as Protected API
+
+  MC-server->>Auth: POST /auth (client_id+secret) -> {access, refresh}
+  MC-server->>Portal-BE: POST /portal/ingest-token (refresh_token) (mTLS/HMAC)
+  Portal-BE->>Auth: OPTIONAL validate or exchange refresh_token
+  Portal-BE-->>MC-server: 200 OK (MC discards refresh_token)
+  Portal-BE->>Portal-BE: store refresh_token encrypted (DB/HSM)
+  Iframe->>Portal-BE: request page/session
+  Portal-BE->>Iframe: set HttpOnly, Secure session cookie (or short-lived access token)
+  Iframe->>Portal-BE: API request (cookie/session forwarded)
+  Portal-BE->>Auth: refresh (when access expired) using stored refresh_token
+  Portal-BE->>API: call protected API with access_token
+  API-->>Portal-BE: respond
+  Portal-BE-->>Iframe: respond to browser
