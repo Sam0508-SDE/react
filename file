@@ -67,3 +67,27 @@ sequenceDiagram
   PortalBE->>API: call Protected API with access_token
   API-->>PortalBE: response
   PortalBE-->>Iframe: respond to browser iframe
+
+
+
+flowchart TD
+    A["MC Browser"] -->|POST auth| B["Auth Service"]
+    B -->|returns access and refresh token| C["Tokens in Browser"]
+    C -->|Pass tokens to iframe| D["Portal Iframe Browser"]
+    D -->|Send tokens| E["Portal Backend"]
+    E -->|Use refresh token| F["Auth Refresh Endpoint"]
+    E -->|Call with access token| G["Protected API"]
+
+    %% Problems
+    P1["Problem 1: Refresh token in browser"]
+    P2["Problem 2: Token handoff via browser"]
+    P3["Problem 3: Cookie set after exposure"]
+
+    %% Problem links
+    C -.-> P1
+    D -.-> P2
+    E -.-> P3
+
+    %% Styles
+    classDef problem fill:#ffdddd,stroke:#ff0000,stroke-width:1px;
+    class P1,P2,P3 problem
