@@ -51,37 +51,19 @@ sequenceDiagram
   MC->>Auth: POST /auth (host-id + secret)\n{ access_token, refresh_token }
 
   %% PROBLEM 1: refresh_token lives in browser
-  rect rgb(255,220,220)
-    note right of MC
-      ⚠️ PROBLEM 1:
-      Refresh token (long-lived) now resides in the browser.
-      Browsers are exposed (XSS, extensions, logs).
-    end note
-  end
+  Note right of MC: ⚠️ PROBLEM 1:\nRefresh token (long-lived)\nnow resides in browser\nUnsafe: XSS, extensions, logs
 
   %% Token handoff (problem area)
   MC->>Iframe: open iframe + pass tokens\n(via postMessage / URL / JS)
-  rect rgb(255,200,200)
-    note right of Iframe
-      ⚠️ PROBLEM 2:
-      Token handoff through browser context.
-      postMessage/URL/JS can leak tokens to logs, referers, or malicious scripts.
-    end note
-  end
+  Note right of Iframe: ⚠️ PROBLEM 2:\nToken handoff via browser\n(postMessage/URL/JS)\nCan leak to logs or scripts
 
   %% Iframe sets cookie (appears safe but weak link)
   Iframe->>PortalBE: request set-cookie / backend call
   PortalBE-->>Iframe: Set-Cookie: refresh=...; HttpOnly; Secure
-  rect rgb(255,230,200)
-    note right of PortalBE
-      ⚠️ PROBLEM 3:
-      Even if stored HttpOnly, the refresh token already passed through the browser.
-      The initial exposure cannot be undone.
-    end note
-  end
+  Note right of PortalBE: ⚠️ PROBLEM 3:\nEven if stored HttpOnly,\nthe token was already exposed\nduring handoff
 
   %% Rest of flow (not highlighted)
-  PortalBE->>Auth: use stored/received refresh_token to refresh access_token
+  PortalBE->>Auth: use stored refresh_token to refresh access_token
   PortalBE->>API: call Protected API with access_token
   API-->>PortalBE: response
   PortalBE-->>Iframe: respond to browser iframe
