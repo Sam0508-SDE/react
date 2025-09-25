@@ -17,3 +17,21 @@ sequenceDiagram
   Portal-BE->>API: call protected API with access_token
   API-->>Portal-BE: respond
   Portal-BE-->>Iframe: respond to browser
+
+
+
+
+sequenceDiagram
+  participant MC as MC (Integrator - Browser/Client)
+  participant Auth as Auth Service (/auth)
+  participant PortalIframe as Portal Iframe (runs in browser)
+  participant PortalBE as Portal Backend
+  participant API as Protected API
+
+  MC->>Auth: POST /auth (host-id + secret) -> { access_token, refresh_token }
+  MC->>PortalIframe: open iframe + pass tokens (postMessage / URL / JS)
+  PortalIframe->>PortalBE: set HttpOnly cookie (backend call or cookie set)
+  PortalBE->>Auth: use stored refresh_token (but PortalBE may not have it if only iframe had it)
+  PortalBE->>API: call protected API with access_token
+  API-->>PortalBE: response
+  PortalBE-->>PortalIframe: respond
